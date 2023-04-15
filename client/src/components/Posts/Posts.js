@@ -1,12 +1,13 @@
-import react from 'react';
+import react, { useEffect } from 'react';
 import Post from './Post/Post';
 import {useSelector} from 'react-redux';
 import {Grid, Typography} from '@material-ui/core';
 
 const Posts = ({setCurrentId})=>{
 
-    const posts = useSelector((state)=> state.posts);
-    console.log(posts);
+    const posts = useSelector((state)=> {console.log("states in Posts component: ", state);
+                return state.posts;
+            });
 
     return(
         !posts.length ? <Typography>No memories yet, let's add one now.</Typography> : (
