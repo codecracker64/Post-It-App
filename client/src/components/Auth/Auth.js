@@ -1,7 +1,6 @@
-import react, {useState} from 'react';
-import { Container, Paper, Typography, Avatar, Button, TextField, TextareaAutosize, Grid  } from '@material-ui/core';
+import {useState} from 'react';
+import { Container, Paper, Typography, Avatar, Button, Grid  } from '@material-ui/core';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import {Link} from 'react-router-dom'
 import { GoogleLogin } from 'react-google-login';
 import {gapi} from 'gapi-script';
 import {useDispatch} from 'react-redux';
@@ -12,6 +11,9 @@ import useStyles from './styles';
 import Input from './Input';
 import { signIn, signUp } from '../../actions/auth';
 
+// console.log("Auth Component Rendered");
+
+
 export default function Auth(){
     const classes=useStyles();
     const dispatch = useDispatch();
@@ -21,11 +23,22 @@ export default function Auth(){
     const [isSignup, setSignUp] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState(initialState);
+    const [errorMessage, setErrorMessage] = useState(false);
+    const [isValidEmail, setIsValidEmail] = useState(true);
+    const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
 
     const handleShowPassword = () => setShowPassword((prev)=>!prev);
     const switchSignInSignUp = () => setSignUp((prev)=>!prev);
 
-    const handleSubmit = (e) => {
+    const validateEamil = (e) =>{
+        if(e.target.value==''){
+            setIsValidEmail(true)
+            return;
+        }
+        setIsValidEmail(emailRegex.test(e.target.value));
+    }
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         if(isSignup){
@@ -33,7 +46,9 @@ export default function Auth(){
         }
 
         else{
-            dispatch(signIn(formData, navigate));
+            const {response:{data: {message}}} = await dispatch(signIn(formData, navigate));
+            setErrorMessage(message);
+            // console.log("errorMessage-->",message);
         }
         
     }
@@ -43,7 +58,7 @@ export default function Auth(){
     }
 
     const googleSuccess = async (res) => {
-        console.log(res)
+        // console.log(res)
         const result = res?.profileObj;
         const token = res?.tokenId;
 
@@ -83,15 +98,18 @@ export default function Auth(){
                                 <Input name="lastName" label="Last Name" half={true} handleChange={handleChange}/>
                             </>
                         )}
-                        <Input name="email" label="E-mail" handleChange={handleChange}/>
+                        <Input name="email" label="E-mail" handleChange={handleChange} validateEamil={validateEamil} isValidEmail={isValidEmail}/>
                         <Input name="password" label="password" type= {showPassword? "text" : "password"} handleShowPassword={handleShowPassword} handleChange={handleChange}/>
                         {isSignup && (
                             <>
                                 <Input name="confirmPassword" label="confirm password" type="password" handleChange={handleChange}/>
                             </>
                         )}
+                        { errorMessage && (
+                            <Typography color='secondary' style={{fontSize:'0.8rem',margin:'0 10px'}}>{errorMessage}</Typography>
+                        )}
                     </Grid>
-                    <Button className={classes.button} fullWidth type="submit" variant="contained" color="primary">{isSignup ? "Sign Up" : "Sing In"}</Button>
+                    <Button disabled={!isValidEmail} className={classes.button} fullWidth type="submit" variant="contained" color="primary">{isSignup ? "Sign Up" : "Sing In"}</Button>
                     <GoogleLogin
                         clientId="238048892600-smqhlvi6irjguetnac432585p1e5a3tm.apps.googleusercontent.com"
                         render={renderProps => (

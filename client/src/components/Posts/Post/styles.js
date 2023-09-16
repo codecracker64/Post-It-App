@@ -1,19 +1,27 @@
 import { makeStyles } from "@material-ui/core";
 
-export default makeStyles({
+export default makeStyles(theme =>({
+    root:{
+        '& .MuiTypography-h5':{
+            [theme.breakpoints.down('sm')]: {
+              fontSize: '1.2rem',
+            },
+          },
+    },
+
     Card:{
         display:'flex',
         flexDirection: 'column',
         borderRadius: '15px',
         position: 'relative',
         height: '100%',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
     },
     media:{
         height:0,
         paddingTop: '56%',
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        backgroundBlendMode: 'darken'
+        backgroundBlendMode: 'darken',
     },
     overlay:{
         position: 'absolute',
@@ -28,6 +36,8 @@ export default makeStyles({
 
     },
     details:{
+        display:'flex',
+        justifyContent: 'space-between',
         margin: '20px'
     },
     title:{
@@ -38,5 +48,9 @@ export default makeStyles({
         display: 'flex',
         justifyContent: 'space-between',
         padding: '0 16px 8px 16px' 
+    },
+    cardAction:{
+        display:'block',
+        textAlign:'initial',
     }
-})
+}))

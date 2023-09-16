@@ -6,7 +6,7 @@ export default (state = { authData : null}, action) => {
 
         case 'LOGOUT':
             localStorage.clear();
-            console.log("authdata states : ",state)
+            // console.log("authdata states : ",state)
             return {...state, authData: null};
         
         default:
