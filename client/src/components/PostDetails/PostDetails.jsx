@@ -46,7 +46,7 @@ const PostDetails = () =>{
             <div className={classes.card}>
                 <div className={`${classes.infoSection} ${classes.root}`}>
                     <Typography variant='h4'>{post.title}</Typography>
-                    <Typography variant='subtitle2' color='textSecondary'gutterBottom>{post.tags[0].split(",").map((tag)=> `#${tag.trimStart()} `)}</Typography>
+                    <Typography variant='subtitle2' color='textSecondary'gutterBottom>{post.tags.map((tag)=> `#${tag.trim().replace('#','')} `)}</Typography>
                     <Typography variant='body1' gutterBottom >{post.message}</Typography>
                     <Typography variant='subtitle1'>creator: {post.name}</Typography>
                     <Typography variant='subtitle2'>{moment(post.createdOn).fromNow()}</Typography>
